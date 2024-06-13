@@ -16,7 +16,8 @@ namespace Ejercicio_Modelo_de_Examen_2
             "Consultar Stock",
             "Total de Ventas",
             "Total de Compras",
-            "Ganancias"
+            "Ganancias",
+            "Salir"
         };
 
         static void Main(string[] args)
@@ -25,7 +26,10 @@ namespace Ejercicio_Modelo_de_Examen_2
             Tienda tienda = new Tienda();
             Console.WriteLine("Ingrese un Nombre para la Tienda");
             tienda.Nombre = Console.ReadLine();
-            ProcesarMenu(tienda, MostrarMenu(MenuSeleccion));
+            do
+            {
+                ProcesarMenu(tienda, MostrarMenu(MenuSeleccion));
+            } while (true);
         }
         static void ProcesarMenu(Tienda tienda, int Opt) {
             switch (Opt) {
@@ -43,9 +47,65 @@ namespace Ejercicio_Modelo_de_Examen_2
                     int Codigo = int.Parse(Console.ReadLine());
                     ReportarStock(tienda, Codigo);
                     Console.ReadKey();
-                    Console.Clear();
+                    break;
+                case 4:
+                    ReportarVentas(tienda);
+                    Console.ReadKey();
+                    break;
+                case 5:
+                    ReportarCompras(tienda);
+                    Console.ReadKey();
+                    break;
+                case 6:
+                    ReportarGanancias(tienda);
+                    Console.ReadKey();
+                    break;
+                case 7:
+                    Environment.Exit(0);
                     break;
             }
+            Console.Clear();
+        }
+        static void ReportarGanancias(Tienda tienda)
+        {
+            float Total = 0;
+            foreach (Comprobante c in tienda.comprobantes)
+            {
+                if (c is Compra)
+                {
+                    Total -= c.Total;
+                }
+                else
+                    Total += c.Total;
+            }
+            Console.WriteLine($"Las ganancias son de: {Total:C}");
+
+        }
+        static void ReportarCompras(Tienda tienda)
+        {
+            float Total = 0;
+            foreach (Comprobante c in tienda.comprobantes)
+            {
+                if (c is Compra)
+                {
+                    Total += c.Total;
+                }
+            }
+            Console.WriteLine($"El total de compras es: {Total:C}");
+
+        }
+        static void ReportarVentas(Tienda tienda)
+        {
+            float Total = 0;
+            foreach (Comprobante c in tienda.comprobantes)
+            {
+                if (c is Venta)
+                {
+                    Total += c.Total;
+                }
+            }
+            Console.WriteLine($"El total de ventas es: {Total:C}");
+
         }
         static void ReportarStock(Tienda tienda, int codigoProducto)
         {
